@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.button-out{
+    @apply btn;
+    @apply badge-outline;
+    @apply text-[#FF3811];
+    @apply border-[#FF3811];
+    @apply hover:bg-[#FF3811];
+    @apply hover:text-white;
+    @apply font-bold;
+
+};
+.button-otext{
+    @apply btn;
+    @apply badge-outline;
+    @apply text-white;
+    @apply border-[#FF3811];
+    @apply hover:bg-[#FF3811];
+    @apply hover:text-white;
+    @apply font-bold;
+
+};
+.button-fill{
+    @apply btn;
+    @apply bg-[#FF3811];
+    @apply text-white;
+    @apply hover:border-[#FF3811];
+    @apply hover:bg-white;
+    @apply hover:text-[#FF3811];
+    @apply font-bold;
+
+};
+.imgbg{
+    background: linear-gradient(90deg, #151515 0%, rgba(21, 21, 21, 0) 100%);
+}
