@@ -1,18 +1,21 @@
 import React, { useContext } from "react";
 import { FaGoogle, FaFacebook, FaTwitter } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import login from "../../assets/login.png";
 import { authProvider } from "../../Context/AuthContext";
 
 const Login = () => {
-  const { googleSignIn } = useContext(authProvider);
+  const { googleSignIn, emailPassSignIn } = useContext(authProvider);
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirect = location.state?.from?.pathname || "/";
+
   const handleGoogleSignIn = () => {
     googleSignIn()
       .then((result) => {
         const user = result.user;
         console.log(user);
-        navigate('/')
+        navigate(redirect, { replace: true });
       })
       .catch((error) => {
         console.log(error.message);
@@ -21,10 +24,36 @@ const Login = () => {
 
   const handleSignIn = (e) => {
     e.preventDefault();
-    const name = e.target.email.value;
+    const email = e.target.email.value;
     const password = e.target.password.value;
 
-    console.log(name, password);
+    emailPassSignIn(email, password)
+      .then((result) => {
+        const loggedUser = result.user;
+        console.log(loggedUser);
+
+        const userEmail = {
+          email: loggedUser.email,
+        };
+
+        fetch("http://localhost:5000/jwt", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(userEmail),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("res data:", data);
+
+            // store token in localStorage
+            localStorage.setItem("car-access-token", data.token);
+            navigate(redirect, { replace: true });
+          });
+      })
+      .catch((error) => console.log(error.message));
+      
   };
 
   return (

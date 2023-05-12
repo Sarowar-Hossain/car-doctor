@@ -8,7 +8,10 @@ const Header = () => {
   // const { uid, displayName } = user;
   const handleSignOut = () => {
     userSignOut()
-      .then(console.log("user sign out"))
+      .then(result=>{
+        console.log(result);
+        localStorage.removeItem('car-access-token')
+      })
       .catch((error) => console.log(error.message));
   };
   // console.log(displayName, uid);

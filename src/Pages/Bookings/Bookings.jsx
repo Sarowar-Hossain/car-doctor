@@ -1,16 +1,32 @@
 import React, { useContext, useEffect, useState } from "react";
 import { authProvider } from "../../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Bookings = () => {
   const { user } = useContext(authProvider);
-  const [booking, setBooking] = useState([]);
+  const [booking, userSignOut, setBooking] = useState([]);
+  const navigate = useNavigate();
   const url = `http://localhost:5000/bookings?email=${user?.email}`;
   useEffect(() => {
-    fetch(url)
+    fetch(url, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("car-access-token")}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        setBooking(data);
+        if (!data.error) {
+          setBooking(data);
+        } else {
+          // userSignOut()
+          //   .then((result) => {
+          //     console.log(result);
+          //   })
+          //   .catch((error) => console.log(error.message));
+
+            navigate("/signin");
+        }
       });
   }, []);
 
@@ -103,11 +119,7 @@ const Bookings = () => {
                 <td className="font-semibold">{book.data}</td>
                 <th>
                   {book.status === "Approved" ? (
-                    <button
-                      className="button-out"
-                    >
-                      Approved
-                    </button>
+                    <button className="button-out">Approved</button>
                   ) : (
                     <button
                       onClick={() => handleApprove(book._id)}

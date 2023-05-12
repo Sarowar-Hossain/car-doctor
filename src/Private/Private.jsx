@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import { authProvider } from "../Context/AuthContext";
-import { NavLink } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 const Private = ({ children }) => {
   const { user, loader } = useContext(authProvider);
+  const location = useLocation();
 
   if (loader) {
     return (
@@ -16,7 +17,7 @@ const Private = ({ children }) => {
   if (user?.email) {
     return children;
   }
-  return <NavLink to="/signin" replace></NavLink>;
+  return <Navigate to="/signin" state={{ from: location }} replace></Navigate>;
 };
 
 export default Private;
